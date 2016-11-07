@@ -1,30 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
  		http://www.springframework.org/schema/beans
  		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
-
+ 		
     <import resource="loggers.xml"/>
+    
+	<bean id="client" class="com.yet.spring.core.beans.Client">
+		<constructor-arg index="0" value="1" />
+		<constructor-arg value="John Smith" />
+		<property name="greeting" value="Hello there!"/>
+	</bean>
 
-    <bean id="client" class="com.yet.spring.core.beans.Client">
-        <constructor-arg index="0" value="1" />
-        <constructor-arg value="John Smith" />
-    </bean>
-
-    <bean id="app" class="com.yet.spring.core.App">
-        <constructor-arg ref="client" />
-        <constructor-arg ref="eventLogger" />
-    </bean>
-
-    <bean id="event" class="com.yet.spring.core.beans.Event" scope="prototype">
+	<bean id="app" class="com.yet.spring.core.App">
+		<constructor-arg ref="client"/>
+        <constructor-arg ref="cacheFileEventLogger"/>
+        <constructor-arg>
+            <map>
+                <entry key="INFO" value-ref="consoleEventLogger"/>
+                <entry key="ERROR" value-ref="combinedEventLogger"/>
+            </map>
+        </constructor-arg>
+	</bean>
+	
+	<bean id="event" class="com.yet.spring.core.beans.Event" scope="prototype">
         <constructor-arg>
             <bean class="java.util.Date"/>
         </constructor-arg>
         <constructor-arg ref="dateFormat"/>
     </bean>
-
+    
     <bean id="dateFormat" class="java.text.DateFormat"
-          factory-method="getDateTimeInstance"/>
-
+        factory-method="getDateTimeInstance"/>
+    
 </beans>
