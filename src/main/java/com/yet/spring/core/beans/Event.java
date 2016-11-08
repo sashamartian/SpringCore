@@ -4,42 +4,57 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+@Component
+@Scope("prototype")
 public class Event {
-	
-	private static final AtomicInteger AUTO_ID = new AtomicInteger(0);
-	
-	private int id;
-	private String msg;
-	private Date date;
 
-	private DateFormat dateFormat;
-	
-	public Event(Date date, DateFormat df) {
-		this.id = AUTO_ID.getAndIncrement();
-		
-		this.date = date;
-		this.dateFormat = df;
-	}
+    private static final AtomicInteger AUTO_ID = new AtomicInteger(0);
 
-	public String getMsg() {
-		return msg;
-	}
+    private int id;
+    private String msg;
 
-	public void setMsg(String msg) {
-		this.msg = msg;
-	}
+    @Autowired
+    @Qualifier("newDate")
+    private Date date;
 
-	public int getId() {
-		return id;
-	}
+    @Autowired
+    private DateFormat dateFormat;
 
-	public Date getDate() {
-		return date;
-	}
+    public Event() {
+        this.id = AUTO_ID.getAndIncrement();
+    }
 
-	@Override
-	public String toString() {
-		return "Event [id=" + id + ", msg=" + msg + ", date=" + dateFormat.format(date) + "]";
-	}
+    public Event(Date date, DateFormat dateFormat) {
+        this();
+        this.date = date;
+        this.dateFormat = dateFormat;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    @Override
+    public String toString() {
+        return "Event [id=" + id + ", msg=" + msg + ", date="
+                + (dateFormat != null ? dateFormat.format(date) : date) + "]";
+    }
 
 }
